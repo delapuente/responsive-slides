@@ -16,10 +16,10 @@
         var manifestUrl;
 
         if (window.devicePixelRatio > 1.2 && supportHIDPI) {
-          manifestUrl = URL+'package@2x.manifest';
+          manifestUrl = URL+'manifest@2x.webapp';
         }
         else {
-          manifestUrl = URL+'package.manifest';
+          manifestUrl = URL+'manifest.webapp';
         }
 
         var req = navigator.mozApps.installPackage(manifestUrl);
