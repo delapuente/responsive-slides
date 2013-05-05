@@ -1,0 +1,15 @@
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  font-size: 62.5%;
+  font-family: "MozTT", Sans;
+  overflow: hidden;
+}
+
+body, p, td, th, pre, body{
+  font-size: 1.5rem;
+}
