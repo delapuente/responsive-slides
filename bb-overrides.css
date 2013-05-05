@@ -1,0 +1,45 @@
+
+section[role="region"] header h2 {
+  font-size: 1.8rem;
+  line-height: 2.2rem;
+}
+
+/* Tabs */
+.bottom[role="tablist"] {
+  margin: -0.5rem 0px;
+}
+
+/* Selected state */
+[role="tablist"] > [role="tab"].active > a {
+  color: #62c6f5
+}
+
+[role="tablist"] > [role="tab"].active > a.icon:after {
+  background-position: center -4rem;
+}
+
+/* Selected state */
+[role="tablist"][data-type="filter"] > [role="tab"].active {
+  background: #fff;
+  border: solid 0.1rem #999;
+  border-top: none;
+  color: #000;
+}
+
+[role="tablist"][data-type="filter"] > [role="tab"]:first-child.active {
+  border-left: none;
+}
+
+[role="tablist"][data-type="filter"] > [role="tab"]:last-child.active {
+  border-right: none;
+}
+
+[role="tablist"][data-type="filter"] > [role="tab"].active > a {
+  color: #000;
+}
+
+[role="tablist"][data-type="filter"] > [role="tab"] > a:active {
+  background-color: #008aaa;
+  color: #fff;
+}
+

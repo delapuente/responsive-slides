@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="base.css">
+
+    <link rel="stylesheet" type="text/css" href="shared/style/responsive.css">
+    <link rel="stylesheet" type="text/css" href="shared/style/headers.css">
+    <link rel="stylesheet" type="text/css" href="shared/style_unstable/progress_activity.css">
+    <link rel="stylesheet" type="text/css" href="shared/style_unstable/lists.css">
+    <link rel="stylesheet" type="text/css" href="shared/style/buttons.css">
+    <link rel="stylesheet" type="text/css" href="shared/style_unstable/tabs.css">
+    <link rel="stylesheet" type="text/css" href="shared/style/status.css">
+
+    <link rel="stylesheet" type="text/css" href="bb-overrides.css">
+    <link rel="stylesheet" type="text/css" href="slides.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+    <script defer src="slides.js"></script>
+    <script defer src="init.js"></script>
+  </head>
+  <body>
+    <progress id="progress" max="8" value="1"></progress>
+    <section role="region" class="skin-organic">
+      <header>
+        <h1>Responsive design</h1>
+      </header>
+    </section>
+
+    <section role="region" class="skin-organic slide">
+      <i></i>
+      <header>
+        <h2>What is responsive design?</h2>
+      </header>
+      <ul data-type="list">
+        <li>
+          <p>Is a web design approach.</p>
+          <p>It is not a technology.</p>
+        </li>
+        <li>
+          <p>Optimal view experience.</p>
+          <p>Across devices.</p>
+        </li>
+        <li>
+          <p>Resolution independent.</p>
+          <p>Use <code>rem</code> as units.</p>
+        </li>
+      </ul>
+    </section>
+
+    <section role="region" class="slide skin-organic">
+      <i></i>
+      <header>
+        <h2>FirefoxOS responsive design</h2>
+      </header>
+      <ul data-type="list">
+        <li>
+          <p>Virtual viewport.</p>
+          <p>CSS pixels vs. device pixels.</p>
+        </li>
+        <li>
+          <p>Building blocks.</p>
+          <p>Built-in reusable widgets.</p>
+        </li>
+        <li>
+          <p>Multi-views applications.</p>
+          <p>A pattern to switch between views.</p>
+        </li>
+      </ul>
+    </section>
+
+    <section role="region" class="slide skin-organic">
+      <i></i>
+      <header>
+        <h2>The virtual viewport</h2>
+      </header>
+      <ul data-type="list">
+        <li>
+          <p>320x480 virtual screen.</p>
+          <p>These are CSS pixels.</p>
+        </li>
+        <li>
+          <p>Set font size for &lt;html&gt;.</p>
+          <p><code>html { font: 62.5% "MozTT"; }</code></p>
+        </li>
+        <li>
+          <p>Default UA font size is 16px.</p>
+          <p>62.5% * 16px = 10px</p>
+        </li>
+        <li>
+          <p>Now use rem units.</p>
+          <p><code>rem</code> stands for "root em"</p>
+        </li>
+        <li>
+          <p>Proportional to html font size.</p>
+          <p>1rem = 10px; 2rem = 20px;</p>
+        </li>
+      </ul>
+      <i></i>
+      <header>
+        <h2>Example of CSS setup</h2>
+      </header>
+      <pre>
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  font-size: 62.5%;
+  font-family: "MozTT", Sans;
+  overflow: hidden;
+}
+
+body, p, td, th, pre, body{
+  font-size: 1.5rem;
+}
+      </pre>
+      <p class="rule">32rem</p>
+    </section>
+
+    <section role="region" class="slide skin-organic">
+      <i></i>
+      <header>
+        <h2>Support for HDPI devices</h2>
+      </header>
+      <ul data-type="list">
+        <li>
+          <p>responsive.css for HDPI</p>
+          <p>Add <code>shared/style/responsive.css</code></p>
+        </li>
+        <li>
+          <p>CSS background size</p>
+          <p>background-size: width height;</p>
+        </li>
+      </ul>
+    </section>
+
+    <section role="region" class="slide skin-organic">
+      <i></i>
+      <header>
+        <h2>Building Blocks</h2>
+      </header>
+      <ul data-type="list">
+        <li>
+          <p>HTML5 + CSS3 snippets.</p>
+          <p>Reusables and responsives.</p>
+        </li>
+        <li>
+          <p>Not native! It's just HTML.</p>
+          <p>But it's standard across Gaia.</p>
+        </li>
+        <li>
+          <p>Several components</p>
+          <p>Headers, buttons, tabs, progress bars, drawers...</p>
+        </li>
+        <li>
+          <p>Not yet JavaScript.</p>
+          <p>Working to build standard controls.</p>
+        </li>
+      </ul>
+      <header>
+        <h2>Buttons</h2>
+      </header>
+      <img width="100%" src="imgs/buttons.jpg" />
+      <header>
+        <h2>Lists</h2>
+      </header>
+      <img width="100%" src="imgs/lists.jpg" />
+      <header>
+        <h2>Navigation</h2>
+      </header>
+      <img width="100%" src="imgs/controls.jpg" />
+      <header>
+        <h2>Headers</h2>
+      </header>
+      <img width="100%" src="imgs/headers.jpg" />
+      <header>
+        <h2>Inputs</h2>
+      </header>
+      <img width="100%" src="imgs/inputs.jpg" />
+    </section>
+
+    <section role="region" class="slide skin-organic">
+      <i></i>
+      <header>
+        <h2>Multi-views applications</h2>
+      </header>
+      <ul data-type="list">
+        <li>
+          <p>Apps have several views.</p>
+          <p>These views are like "cards".</p>
+        </li>
+        <li>
+          <p>Listen for hash changes.</p>
+          <p>Each hash is a view configuration.</p>
+        </li>
+        <li>
+          <p>"data-viewport" attribute.</p>
+          <p>To control position.</p>
+        </li>
+        <li>
+          <p>CSS attribute selectors.</p>
+          <p>[data-viewport="left"] { }</p>
+        </li>
+        <li>
+          <p>CSS transform rules.</p>
+          <p>{ transform: translateY(100%) }.</p>
+        </li>
+      </ul>
+      <i></i>
+      <header>
+        <h2>Markup example</h2>
+      </header>
+      <pre>&lt;section id="test" role="region" class="card" data-viewport="right"&gt;
+  &lt;header&gt;
+    &lt;h1&gt;Title example&lt;/h1&gt;
+  &lt;/header&gt;
+&lt;/section&gt;</pre>
+      <i></i>
+      <header>
+        <h2>CSS example</h2>
+      </header>
+      <pre>.card {
+  position: absolute;
+  top: 0; bottom: 0; left: 0; right: 0;
+  transition: transform 0.3s ease;
+  transform: translate(0,0);
+}
+.card[data-viewport="right"] {
+  transform: translateX(100%);
+}</pre>
+      <i></i>
+      <header>
+        <h2>JavaScript example</h2>
+      </header>
+      <pre>window.addEventListener('hashchange', function () {
+  var target = location.hash.split('/')[1];
+  var targetElement = document.getElementById(target);
+  delete target.dataset.viewport;
+});</pre>
+
+    </section>
+
+    <section id="navigation" role="region">
+      <nav>
+        <button id="previous-slide-button" class="start">Previous</button>
+        <button id="next-slide-button" class="recommend end">Next</button>
+        <ul class="bottom" role="tablist" data-type="filter">
+        </ul>
+      </nav>
+    </section>
+
+    <section role="status">
+      <p>The presentation <strong>is ready</strong></p>
+    </section>
+  </body>
+</html>
+
