@@ -16,4 +16,4 @@ function waitForDOM(callback) {
   }
 }
 
-waitForDOM(setupPresentation);
+waitForDOM(CompactSlide.init);

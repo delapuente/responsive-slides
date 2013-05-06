@@ -204,11 +204,11 @@ body, p, td, th, pre, body{
         </li>
         <li>
           <p>CSS attribute selectors.</p>
-          <p>[data-viewport="left"] { }</p>
+          <p>[data-viewport="right"] { }</p>
         </li>
         <li>
           <p>CSS transform rules.</p>
-          <p>{ transform: translateY(100%) }.</p>
+          <p>{ transform: translateX(100%) }.</p>
         </li>
       </ul>
       <i></i>
@@ -238,11 +238,55 @@ body, p, td, th, pre, body{
         <h2>JavaScript example</h2>
       </header>
       <pre>window.addEventListener('hashchange', function () {
+  // dispose the current view
+  currentView.dataset.viewport = currentView.dataset.origin;
+
+  // bring the target view
   var target = location.hash.split('/')[1];
-  var targetElement = document.getElementById(target);
-  delete target.dataset.viewport;
+  currentView = document.getElementById(target);
+  currentView.dataset.origin = target.dataset.viewport;
+  delete currentView.dataset.viewport;
 });</pre>
 
+    </section>
+
+    <section role="region" class="slide skin-organic">
+      <i></i>
+      <header>
+        <h2>Useful links</h2>
+      </header>
+      <ul data-type="list">
+        <li>
+          <a href="https://github.com/mozilla-b2g/gaia/" target="_blank">
+            <p>Gaia repo in GitHub.</p>
+            <p>Download the .zip or clone the repo.</p>
+          </a>
+        </li>
+        <li>
+          <a href="http://buildingfirefoxos.com" target="_blank">
+            <p>buildingfirefoxos.com</p>
+            <p>Building Blocks samples &amp; transitions.</p>
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <section role="region" class="slide skin-organic">
+      <i></i>
+      <header>
+        <h2>About me</h2>
+      </header>
+      <ul data-type="list">
+        <li>
+          <aside class="pack-end">
+            <img alt="Salvador de la Puente González" src="img/salva.png" />
+          </aside>
+          <a href="http://unoyunodiez.com" target="_blank">
+            <p><strong>Salvador</strong> de la Puente González</p>
+            <p><code>@salvadelapuente</code> - unoyunodiez.com</p>
+          </a>
+        </li>
+      </ul>
     </section>
 
     <section id="navigation" role="region">
@@ -254,7 +298,7 @@ body, p, td, th, pre, body{
       </nav>
     </section>
 
-    <section role="status">
+    <section id="presentation-notifier" role="status">
       <p>The presentation <strong>is ready</strong></p>
     </section>
   </body>

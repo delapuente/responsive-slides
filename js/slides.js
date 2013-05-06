@@ -1,137 +1,237 @@
-var slides, tabs, currentSlideNumber = 0, progress, animation;
-var previousSlideButton, nextSlideButton;
+var CompactSlide = (function() {
+  'use strict';
 
-function setupNavigation(itemCount) {
-  previousSlideButton = document.getElementById('previous-slide-button');
-  nextSlideButton = document.getElementById('next-slide-button');
+  var EVENT_NAMESPACE = 'compactslide';
 
-  progress = document.getElementById('progress');
-  progress.max = itemCount;
-
-  previousSlideButton.disabled = true;
-  previousSlideButton.onclick = navigateToPreviousSlide;
-  nextSlideButton.disabled = true;
-  nextSlideButton.onclick = navigateToNextSlide;
-
-  var directIndex = document.querySelector('#navigation ul');
-  var tab, tabContainer = document.createDocumentFragment();
-  for (var i = 1; i <= itemCount; i++) {
-    tab = document.createElement('li');
-    tab.setAttribute('role', 'tab');
-    tab.style.width = 'calc(100% / ' + itemCount + ')';
-    tab.innerHTML = '<a href="#/' + i + '">' + i + '</a>';
-    tab.dataset.slide = i;
-    tabContainer.appendChild(tab);
+  function NavigationModel(slides) {
+    this.currentSlideNumber = 0;
+    this.slideCount = slides.length;
+    this.steppingToTarget = 0;
   }
-  directIndex.appendChild(tabContainer)
-  tabs = [].slice.call(directIndex.children);
 
-  window.addEventListener('hashchange', function (evt) {
-    var targetSlide = parseInt(location.hash.split('/')[1], 10);
-    goToSlide(targetSlide);
-  });
-}
-
-function navigateToSlide(targetSlide) {
-  location.hash = '#/' + targetSlide;
-}
-
-function setupSlides() {
-  slides = [].slice.call(document.getElementsByClassName('slide')),
-  slides.forEach(function onEachSlide(slide) {
-    slide.dataset.viewport = 'right';
-  });
-}
-
-function goToSlide(targetSlideNumber) {
-  clearInterval(animation);
-
-  var steps = Math.abs(targetSlideNumber - currentSlideNumber),
-      reversed = targetSlideNumber < currentSlideNumber;
-
-  function moveToTargetSlide() {
-    if (steps === 0) {
-      clearInterval(animation);
+  NavigationModel.prototype.goToSlide = function(targetSlideNumber) {
+    if (targetSlideNumber < 1 || targetSlideNumber > this.slideCount) {
       return;
     }
+    var forward = targetSlideNumber > this.currentSlideNumber;
+    var steps = Math.abs(targetSlideNumber - this.currentSlideNumber);
+    this.goToSlideStepByStep(steps, forward);
+  };
 
-    if (reversed) {
-      previousSlide();
+  NavigationModel.prototype.goToSlideStepByStep = function(steps, forward) {
+    var self = this;
+    function nextStep() {
+      if (forward) {
+        self.nextSlide();
+      }
+      else {
+        self.previousSlide();
+      }
+      steps--;
+      if (steps) {
+        self.steppingToTarget = setTimeout(nextStep, 200);
+      }
     }
-    else {
-      nextSlide();
+
+    clearTimeout(this.steppingToTarget);
+    nextStep();
+  }
+
+  NavigationModel.prototype.nextSlide = function() {
+    if (!this.isEnd) {
+      this.currentSlideNumber++;
+      this.emit(
+        EVENT_NAMESPACE + ':slidechange',
+        { forward: true,
+          from: this.currentSlideNumber - 1 , to: this.currentSlideNumber }
+      );
     }
-    steps--;
+  };
+
+  Object.defineProperty(NavigationModel.prototype, 'isEnd', {
+    get: function () {
+      return this.currentSlideNumber === this.slideCount;
+    }
+  });
+
+  NavigationModel.prototype.previousSlide = function() {
+    if (!this.isBegin) {
+      this.currentSlideNumber--;
+      this.emit(
+        EVENT_NAMESPACE + ':slidechange',
+        { backward: true,
+          from: this.currentSlideNumber + 1 , to: this.currentSlideNumber }
+      );
+    }
+  };
+
+  Object.defineProperty(NavigationModel.prototype, 'isBegin', {
+    get: function () {
+      return this.currentSlideNumber === 1;
+    }
+  });
+
+  NavigationModel.prototype.emit = function(type, detail) {
+    var syncEvent = new CustomEvent(type, { detail: detail });
+    window.dispatchEvent(syncEvent);
   }
 
-  moveToTargetSlide();
-  animation = setInterval(moveToTargetSlide, 100);
-}
+  function NavigationRender(model, slides, progress, navigator) {
+    this.model = model;
+    this.slides = slides;
+    this.progress = progress;
+    this.navigator = navigator;
 
-function nextSlide() {
-  var currentIndex = currentSlideNumber - 1,
-      currentSlide = slides[currentIndex],
-      currentTab = tabs[currentIndex],
-      nextSlide = slides[currentIndex + 1],
-      nextTab = tabs[currentIndex + 1];
+    this.setupSlides();
+    this.setupProgressBar();
+    this.setupNavigationButtons();
+    this.setupPaginator();
 
-  if (currentSlide) {
-    currentSlide.dataset.viewport = 'left';
-    currentTab.classList.remove('active');
+    var self = this;
+    window.addEventListener(EVENT_NAMESPACE + ':slidechange', function (evt) {
+      self.updateNavigation(evt.detail);
+    });
   }
-  if (nextSlide) {
-    delete nextSlide.dataset.viewport;
-    nextTab.classList.add('active');
+
+  NavigationRender.prototype.setupSlides = function () {
+    this.slides.forEach(function onEachSlide(slide) {
+      slide.dataset.viewport = 'right';
+    });
   }
-  updateNavigationState(false);
-}
 
-function previousSlide() {
-  var currentIndex = currentSlideNumber - 1,
-      currentSlide = slides[currentIndex],
-      currentTab = tabs[currentIndex],
-      previousSlide = slides[currentIndex - 1],
-      previousTab = tabs[currentIndex - 1];
+  NavigationRender.prototype.setupProgressBar = function () {
+    this.progress.max = this.model.slideCount;
+  };
 
-  if (currentSlide) {
-    currentSlide.dataset.viewport = 'right';
-    currentTab.classList.remove('active');
+  NavigationRender.prototype.setupNavigationButtons = function () {
+    this.nextSlideButton = document.getElementById('next-slide-button');
+    this.previousSlideButton = document.getElementById('previous-slide-button');
+  };
+
+  NavigationRender.prototype.setupPaginator = function () {
+    var slideCount = this.model.slideCount;
+    var directIndex = this.navigator.querySelector('ul');
+    var tab, tabContainer = document.createDocumentFragment();
+    for (var i = 1; i <= slideCount; i++) {
+      tab = document.createElement('li');
+      tab.setAttribute('role', 'tab');
+      tab.style.width = 'calc(100% / ' + slideCount + ')';
+      tab.innerHTML = '<a href="#/' + i + '">' + i + '</a>';
+      tabContainer.appendChild(tab);
+    }
+    directIndex.appendChild(tabContainer)
   }
-  if (previousSlide) {
-    delete previousSlide.dataset.viewport;
-    previousTab.classList.add('active');
+
+  NavigationRender.prototype.updateNavigation = function (detail) {
+    this.updateSlides(detail);
+    this.updateProgressBar();
+    this.updateNavigationButtons();
+    this.updatePaginator();
+  };
+
+  NavigationRender.prototype.updateSlides = function (detail) {
+    var currentSlide = this.slides[detail.to - 1],
+        previousSlide = this.slides[detail.from - 1];
+
+    delete currentSlide.dataset.viewport;
+    if (previousSlide) {
+      if ('forward' in detail) {
+        previousSlide.dataset.viewport = 'left';
+      }
+      else if ('backward' in detail) {
+        previousSlide.dataset.viewport = 'right';
+      }
+    }
   }
-  updateNavigationState(true);
-}
 
-function updateNavigationState(reversed) {
-  currentSlideNumber += reversed ? -1 : 1;
-  progress.value = currentSlideNumber;
-  previousSlideButton.disabled = currentSlideNumber === 1;
-  nextSlideButton.disabled = currentSlideNumber === slides.length;
-}
+  NavigationRender.prototype.updateProgressBar = function () {
+    this.progress.value = this.model.currentSlideNumber;
+  };
 
-function notifyReady() {
-  var notification = document.querySelector('section[role="status"]');
-  notification.classList.add('active');
-  setTimeout(function () {
-    notification.classList.remove('active');
-  }, 1000);
-}
+  NavigationRender.prototype.updateNavigationButtons = function() {
+    this.nextSlideButton.disabled = this.model.isEnd;
+    this.previousSlideButton.disabled = this.model.isBegin;
+  }
 
-function setupPresentation() {
-  setupSlides();
-  setupNavigation(slides.length);
-  notifyReady();
-  navigateToSlide(1);
-}
+  NavigationRender.prototype.updatePaginator = function() {
+    var currentSlideIndex = this.model.currentSlideNumber - 1;
+    var pages = [].slice.call(
+      this.navigator.querySelectorAll('[role="tablist"] > [role="tab"]')
+    );
+    pages.forEach(function onEachPageItem(pageItem, index) {
+      if (index === currentSlideIndex) {
+        pageItem.classList.add('active');
+      }
+      else {
+        pageItem.classList.remove('active');
+      }
+    });
+  }
 
-function navigateToNextSlide() {
-  if (currentSlideNumber < slides.length)
-    navigateToSlide(currentSlideNumber+1);
-}
+  function NavigationControl(model, navigator) {
+    this.model = model;
+    this.navigator = navigator;
 
-function navigateToPreviousSlide() {
-  if (currentSlideNumber > 1)
-    navigateToSlide(currentSlideNumber-1);
-}
+    this.setupNavigationButtons();
+    this.setupHashControl();
+  }
+
+  NavigationControl.prototype.setupNavigationButtons = function () {
+    document.getElementById('next-slide-button').onclick =
+      this.navigateToNextSlide.bind(this);
+
+    document.getElementById('previous-slide-button').onclick =
+      this.navigateToPreviousSlide.bind(this);
+  };
+
+  NavigationControl.prototype.setupHashControl = function () {
+    var self = this;
+    window.addEventListener('hashchange', function () {
+      var targetSlide = parseInt(location.hash.split('/')[1], 10);
+      self.model.goToSlide(targetSlide);
+    });
+    window.location.hash = '#';
+  };
+
+  NavigationControl.prototype.navigateToSlide = function (targetSlide) {
+    window.location.hash = '#/' + targetSlide;
+  }
+
+  NavigationControl.prototype.navigateToNextSlide = function () {
+    var targetSlide = this.model.currentSlideNumber + 1;
+    this.navigateToSlide(targetSlide);
+  };
+
+  NavigationControl.prototype.navigateToPreviousSlide = function () {
+    var targetSlide = this.model.currentSlideNumber - 1;
+    this.navigateToSlide(targetSlide);
+  };
+
+  function init() {
+    var progress = document.getElementById('progress');
+    var navigation = document.getElementById('navigation');
+    var slides = [].slice.call(document.getElementsByClassName('slide'));
+
+    var theModel = new NavigationModel(slides);
+    var theRender = new  NavigationRender(
+      theModel,
+      slides, progress, navigation
+    );
+    var theControl = new NavigationControl(theModel, navigation);
+    theControl.navigateToSlide(1);
+
+    notifyPresentationIsReady();
+  }
+
+  function notifyPresentationIsReady() {
+    var presentationNotifier = document.getElementById('presentation-notifier');
+    presentationNotifier.classList.add('active');
+    setTimeout(function () {
+      presentationNotifier.classList.remove('active');
+    }, 1000);
+  }
+
+  return {
+    init: init
+  };
+}());
