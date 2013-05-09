@@ -16,20 +16,6 @@
   transform: translate(0,0);
 }
 
-.slide.title h1,
-.slide.title h2 {
-  font-family: "MozTT", Sans;
-  text-align: center;
-  vertical-align: middle;
-}
-
-.slide.title h1 {
-  font-size: 3rem;
-}
-
-.slide.title h2 {
-  font-size: 2rem;
-}
 .slide[data-viewport="right"] {
   transform: translateX(100%);
 }
