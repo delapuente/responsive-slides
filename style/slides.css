@@ -7,13 +7,6 @@
 }
 
 .slide {
-  position: absolute;
-  top: 5rem;
-  left: 0;
-  right: 0;
-  bottom: 9.5rem;
-  overflow-x: hidden;
-  overflow-y: auto;
   transition: transform 0.3s ease;
   transform: translate(0,0);
 }
@@ -52,10 +45,4 @@
 
 #presentation-notifier.active {
   opacity: 1;
-}
-
-pre {
-  margin: 1rem;
-  overflow: scroll;
-  background-color: white;
 }

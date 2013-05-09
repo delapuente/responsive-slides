@@ -159,12 +159,7 @@ var CompactSlide = (function() {
       this.navigator.querySelectorAll('[role="tablist"] > [role="tab"]')
     );
     pages.forEach(function onEachPageItem(pageItem, index) {
-      if (index === currentSlideIndex) {
-        pageItem.classList.add('active');
-      }
-      else {
-        pageItem.classList.remove('active');
-      }
+      pageItem.setAttribute('aria-selected', index === currentSlideIndex);
     });
   }
 

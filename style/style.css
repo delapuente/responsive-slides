@@ -18,4 +18,6 @@ iframe {
 
 pre {
   margin: 1rem;
+  overflow: auto;
+  background-color: white;
 }

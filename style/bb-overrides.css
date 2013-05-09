@@ -10,31 +10,31 @@ section[role="region"] header h2 {
 }
 
 /* Selected state */
-[role="tablist"] > [role="tab"].active > a {
+[role="tablist"] > [role="tab"][aria-selected="true"] > a {
   color: #62c6f5
 }
 
-[role="tablist"] > [role="tab"].active > a.icon:after {
+[role="tablist"] > [role="tab"][aria-selected="true"] > a.icon:after {
   background-position: center -4rem;
 }
 
 /* Selected state */
-[role="tablist"][data-type="filter"] > [role="tab"].active {
+[role="tablist"][data-type="filter"] > [role="tab"][aria-selected="true"] {
   background: #fff;
   border: solid 0.1rem #999;
   border-top: none;
   color: #000;
 }
 
-[role="tablist"][data-type="filter"] > [role="tab"]:first-child.active {
+[role="tablist"][data-type="filter"] > [role="tab"]:first-child[aria-selected="true"] {
   border-left: none;
 }
 
-[role="tablist"][data-type="filter"] > [role="tab"]:last-child.active {
+[role="tablist"][data-type="filter"] > [role="tab"]:last-child[aria-selected="true"] {
   border-right: none;
 }
 
-[role="tablist"][data-type="filter"] > [role="tab"].active > a {
+[role="tablist"][data-type="filter"] > [role="tab"][aria-selected="true"] > a {
   color: #000;
 }
 
@@ -42,4 +42,3 @@ section[role="region"] header h2 {
   background-color: #008aaa;
   color: #fff;
 }
-

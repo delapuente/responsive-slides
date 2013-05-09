@@ -1,3 +1,0 @@
-[submodule "shared"]
-	path = shared/bb
-	url = https://github.com/buildingfirefoxos/Building-Blocks.git

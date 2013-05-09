@@ -10,6 +10,6 @@ html {
   overflow: hidden;
 }
 
-body, p, td, th, pre, body{
+body, p, td, th, pre {
   font-size: 1.5rem;
 }
