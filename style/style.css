@@ -21,3 +21,38 @@ pre {
   overflow: auto;
   background-color: white;
 }
+
+#progress {
+  position: fixed;
+  z-index: 20;
+}
+
+.deprecated {
+  background-color: #F08080;
+}
+
+.deprecated p {
+  text-decoration: line-through;
+}
+
+.slide.title h1,
+.slide.title h2 {
+  font-family: "MozTT", Sans;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.slide.title h1 {
+  font-size: 3rem;
+}
+
+.slide.title h2 {
+  font-size: 2rem;
+}
+
+ul.author {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}

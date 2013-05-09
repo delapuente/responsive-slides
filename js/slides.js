@@ -111,16 +111,28 @@ var CompactSlide = (function() {
   NavigationRender.prototype.setupPaginator = function () {
     var slideCount = this.model.slideCount;
     var directIndex = this.navigator.querySelector('ul');
-    var tab, tabContainer = document.createDocumentFragment();
+    var label, tab, tabContainer = document.createDocumentFragment();
     for (var i = 1; i <= slideCount; i++) {
       tab = document.createElement('li');
       tab.setAttribute('role', 'tab');
       tab.style.width = 'calc(100% / ' + slideCount + ')';
-      tab.innerHTML = '<a href="#/' + i + '">' + i + '</a>';
+      label = this.getLabelForPage(i);
+      tab.innerHTML = '<a href="#/' + i + '">' + label + '</a>';
       tabContainer.appendChild(tab);
     }
     directIndex.appendChild(tabContainer)
-  }
+  };
+
+  NavigationRender.prototype.getLabelForPage = function (pageNumber) {
+    var i = pageNumber - 1;
+    if (this.slides[i].classList.contains('index'))
+      return 'I';
+
+    if (this.slides[i].classList.contains('title'))
+      return 'T';
+
+    return pageNumber;
+  };
 
   NavigationRender.prototype.updateNavigation = function (detail) {
     this.updateSlides(detail);
@@ -167,8 +179,27 @@ var CompactSlide = (function() {
     this.model = model;
     this.navigator = navigator;
 
+    this.setupNavigationArrows();
     this.setupNavigationButtons();
     this.setupHashControl();
+  }
+
+  NavigationControl.prototype.setupNavigationArrows = function () {
+    var self = this;
+    var RIGHT_ARROW = 39, LEFT_ARROW = 37;
+    window.addEventListener('keypress', function (evt) {
+      var keycode = evt.keyCode;
+      switch(keycode) {
+        case RIGHT_ARROW:
+          evt.preventDefault();
+          self.navigateToNextSlide();
+          break;
+        case LEFT_ARROW:
+          evt.preventDefault();
+          self.navigateToPreviousSlide();
+          break;
+      }
+    });
   }
 
   NavigationControl.prototype.setupNavigationButtons = function () {
