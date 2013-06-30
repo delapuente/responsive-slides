@@ -1,4 +1,4 @@
-# FirefoxOS responsive design
+# Firefox OS responsive design
 
 Here you have a complete slide application with responsive design using [Building Blocks](buildingfirefoxos.com).
 
